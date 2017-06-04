@@ -17,6 +17,20 @@ var defaultOptions = {
     trigger:null
 };
 
+function slicePath(angle,radius,innerRadius){
+    var slice = document.createElementNS(svgNS,"path");
+    var cos = Math.cos(angle);
+    var sin = Math.sin(angle);
+    var d = "m" + innerRadius + ",0 " +
+        "L" + radius + ",0 " +
+        "A" + radius + "," + radius + " 0 0,1 " + radius * cos + "," + radius * sin + " " +
+        "L" + innerRadius * cos + "," + innerRadius * sin + " " +
+        "A" + innerRadius + "," + innerRadius + " 0 0,0 " + innerRadius + ",0 " +
+        "z";
+    slice.setAttribute("d",d);
+    return slice;
+}
+
 //creates a SVG <path> element from an options map
 //the map contains the following keys:
 //angle: the angle(width) of the slice in radians
@@ -27,16 +41,7 @@ var defaultOptions = {
 //--
 //All other keys are added as attributes to the <path> element in the form key="value"
 function createSlice(options){
-    var slice = document.createElementNS(svgNS,"path");
-    var cos = Math.cos(options.angle);
-    var sin = Math.sin(options.angle);
-    var d = "m" + options.innerRadius + ",0 " +
-        "L" + options.radius + ",0 " +
-        "A" + options.radius + "," + options.radius + " 0 0,1 " + options.radius * cos + "," + options.radius * sin + " " +
-        "L" + options.innerRadius * cos + "," + options.innerRadius * sin + " " +
-        "A" + options.innerRadius + "," + options.innerRadius + " 0 0,0 " + options.innerRadius + ",0 " +
-        "z";
-    slice.setAttribute("d",d);
+    var slice = slicePath(options.angle, options.radius, options.innerRadius);
     slice.setAttribute("transform","translate(" + options.radius + "," + options.radius + ")rotate(" + options.rotation*360/(2*Math.PI) + " 0 0)");
     slice.addEventListener("mouseup",options.trigger);
     delete(options.angle);
