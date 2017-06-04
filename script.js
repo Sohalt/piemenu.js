@@ -14,7 +14,8 @@ var defaultOptions = {
     innerRadius:0,
     radius:50,
     rotation:0,
-    trigger:null
+    trigger:null,
+    extendedTargetArea:false
 };
 
 function slicePath(angle,radius,innerRadius){
@@ -41,18 +42,42 @@ function slicePath(angle,radius,innerRadius){
 //--
 //All other keys are added as attributes to the <path> element in the form key="value"
 function createSlice(options){
-    var slice = slicePath(options.angle, options.radius, options.innerRadius);
-    slice.setAttribute("transform","translate(" + options.radius + "," + options.radius + ")rotate(" + options.rotation*360/(2*Math.PI) + " 0 0)");
-    slice.addEventListener("mouseup",options.trigger);
-    delete(options.angle);
-    delete(options.radius);
-    delete(options.innerRadius);
-    delete(options.rotation);
-    delete(options.trigger);
-    for(key in options){
-        slice.setAttribute(key,options[key]);
+    if (options.extendedTargetArea) {
+        var screenDiagonal = Math.sqrt(window.innerWidth*window.innerWidth + window.innerHeight*window.innerHeight);
+        var visibleSlice = slicePath(options.angle, options.radius, options.innerRadius);
+        visibleSlice.setAttribute("transform","translate(" + window.innerWidth + "," + window.innerHeight + ")rotate(" + options.rotation*360/(2*Math.PI) + " 0 0)");
+        var targetSlice =  slicePath(options.angle, screenDiagonal, options.innerRadius);
+        targetSlice.setAttribute("transform","translate(" + window.innerWidth + "," + window.innerHeight + ")rotate(" + options.rotation*360/(2*Math.PI) + " 0 0)");
+        targetSlice.setAttribute("style","fill:#00000000 !important");
+        targetSlice.addEventListener("mouseup",options.trigger);
+        var group = document.createElementNS(svgNS,"g");
+        group.appendChild(visibleSlice);
+        group.appendChild(targetSlice);
+        delete(options.angle);
+        delete(options.radius);
+        delete(options.innerRadius);
+        delete(options.rotation);
+        delete(options.trigger);
+        delete(options.extendedTargetArea);
+        for(key in options){
+            group.setAttribute(key,options[key]);
+        }
+        return group;
+    } else {
+        var slice = slicePath(options.angle, options.radius, options.innerRadius);
+        slice.setAttribute("transform","translate(" + options.radius + "," + options.radius + ")rotate(" + options.rotation*360/(2*Math.PI) + " 0 0)");
+        slice.addEventListener("mouseup",options.trigger);
+        delete(options.angle);
+        delete(options.radius);
+        delete(options.innerRadius);
+        delete(options.rotation);
+        delete(options.trigger);
+        delete(options.extendedTargetArea);
+        for(key in options){
+            slice.setAttribute(key,options[key]);
+        }
+        return slice;
     }
-    return slice;
 };
 
 //create a <svg> element containing a pie menu
@@ -111,10 +136,11 @@ function pie(arg,generalOptions){
             var slice = createSlice(merge(options,generalOptions,{angle:angle,rotation:i*angle},defaultOptions));
             menu.appendChild(slice);
         }
-        //FIXME use max radius of slices? or make svg element span whole browser window?
         var opts = merge(generalOptions,defaultOptions);
-        menu.setAttribute("width",opts.radius * 2);
-        menu.setAttribute("height",opts.radius * 2);
+        var width = (options.extendedTargetArea ? window.innerWidth : opts.radius) * 2;
+        var height = (options.extendedTargetArea ? window.innerHeight : opts.radius) * 2;
+        menu.setAttribute("width",width);
+        menu.setAttribute("height",height);
         return menu;
     }
 }
