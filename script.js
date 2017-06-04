@@ -1,10 +1,10 @@
 var svgNS = "http://www.w3.org/2000/svg";
 
 function merge(){
-    var o = {}
+    var o = {};
     for (var i = arguments.length - 1; i >= 0; i --) {
-        var s = arguments[i]
-        for (var k in s) o[k] = s[k]
+        var s = arguments[i];
+        for (var k in s) { o[k] = s[k]; };
     }
     return o;
 }
@@ -98,7 +98,7 @@ function pie(arg,generalOptions){
     function pieDicts(sliceOptions,generalOptions){
         var menu = document.createElementNS(svgNS,"svg");
         menu.setAttribute("xmlns",svgNS);
-        menu.setAttribute("version","1.1")
+        menu.setAttribute("version","1.1");
         var n = sliceOptions.length;
         var angle = 2*Math.PI/n;
         for(var i = 0; i < n; i++){
@@ -126,8 +126,8 @@ function contextPie(slices,generalOptions){
         menu.style.top = y - (menu.height.baseVal.value/2);
         menu.style.display = "block";
         e.preventDefault();
-    }
+    };
     window.onmouseup = function (e){
         menu.style.display = "none";
-    }
+    };
 }

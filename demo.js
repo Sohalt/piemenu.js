@@ -6,8 +6,8 @@ for(var i = 0; i < 8; i++){
             c = "odd";
         };
         slices[k] = {
-            trigger:function(){console.log("slice " + k + " triggered")},
-            "class":c,
+            trigger:function(){console.log("slice " + k + " triggered");},
+            "class":c
         };
     })(i);
 }
