@@ -7,6 +7,7 @@ for(var i = 0; i < 8; i++){
         };
         slices[k] = {
             trigger:function(){console.log("slice " + k + " triggered");},
+            extendedTargetArea:true,
             "class":c
         };
     })(i);

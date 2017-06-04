@@ -1,13 +1,13 @@
-path.even:hover {
+.even:hover {
     fill:#386E82;
 }
-path.odd:hover {
+.odd:hover {
     fill:#265E99;
 }
 
-path.even {
+.even {
     fill:#4E9CB5;
 }
-path.odd {
+.odd {
     fill:#327CCB;
 }
